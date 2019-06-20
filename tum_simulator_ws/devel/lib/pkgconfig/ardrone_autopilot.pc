@@ -1,0 +1,8 @@
+prefix=/home/davidbrahiam/tum_simulator_ws/devel
+
+Name: ardrone_autopilot
+Description: Description of ardrone_autopilot
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/davidbrahiam/tum_simulator_ws/devel/lib 
+Requires: ardrone_autonomy geometry_msgs roscpp rospy sensor_msgs std_msgs cv_bridge
