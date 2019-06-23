@@ -1,8 +1,0 @@
-prefix=/home/davidbrahiam/tum_simulator_ws/devel
-
-Name: cvg_sim_gazebo
-Description: Description of cvg_sim_gazebo
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/davidbrahiam/tum_simulator_ws/devel/lib 
-Requires: 

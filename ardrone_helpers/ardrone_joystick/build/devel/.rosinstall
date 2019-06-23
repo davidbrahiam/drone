@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/davidbrahiam/catkin_ws/src/ardrone_helpers/ardrone_joystick/build/devel/setup.sh
