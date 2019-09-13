@@ -18,6 +18,8 @@ from cv_bridge import CvBridge, CvBridgeError
 import cv2
 import os
 
+from time import time
+
 from std_msgs.msg import String
 from std_msgs.msg import Empty
 from geometry_msgs.msg import Twist
@@ -53,6 +55,13 @@ model = load_model(args["model"])
 model._make_predict_function()
 graph = tf.get_default_graph()
 lb = pickle.loads(open(args["label_bin"], "rb").read())
+
+time_initial = 0
+time_final = 0
+qtd_moves = 0
+c_move = 0
+l_move = 0
+r_move = 0
 
 # Topics for controle drone
 # takeoff
@@ -151,28 +160,40 @@ def check_image(img):
 def navegate(dir):
     global control_pub
     global takeoff_pub
+    global time_final
+    global qtd_moves
+    global c_move
+    global l_move
+    global r_move
+    time_final = time()
+    qtd_moves+=1
     takeoff_pub.publish(Empty())
     vel_msg = Twist()
     vel_msg.angular.x = 0.0
     vel_msg.angular.y = 0.0
     vel_msg.angular.z = 0.0
+
     if(dir == 'center'):
         vel_msg.linear.x = 0.5
         vel_msg.linear.y = 0.0
         vel_msg.linear.z = 0.0
+        c_move +=1
         print('move to center')
     elif(dir == 'left'):
         vel_msg.linear.x = 0.0
         vel_msg.linear.y = -0.3
         vel_msg.linear.z = 0.0
+        r_move +=1
         print('move to left')
     elif(dir == 'right'):
         vel_msg.linear.x = 0.0
         vel_msg.linear.y = 0.3
         vel_msg.linear.z = 0.0
+        l_move +=1
         print('move to right')
     else:
         print('stop')
+    print("QTD_MOVE: {:d}, C: {:d}, R: {:d}, L: {:d}".format(qtd_moves, c_move, r_move, l_move))
 
     control_pub.publish(vel_msg)
 
@@ -185,6 +206,7 @@ def navegate(dir):
 
 
 def main():
+    global time_initial
     global takeoff_pub
     rospy.init_node('image_listener')
     # Define your image topic
@@ -203,5 +225,10 @@ if __name__ == '__main__':
 
 
 # USAGE
+# Stop rostopic pub -1 /ardrone/land std_msgs/Empty
+# Start python tcc_navegate.py --model output/simple_nn.model --label-bin output/simple_nn_lb.pickle --width 32 --height 32 --flatten 1
+# Camera rosrun image_view image_view image:=/ardrone/front/image_raw 
+# World roslaunch cvg_sim_gazebo tcc_world.launch
+
 # python predict.py --image images/dog.jpg --model output/simple_nn.model --label-bin output/simple_nn_lb.pickle --width 32 --height 32 --flatten 1
 # python predict.py --image images/dog.jpg --model output/smallvggnet.model --label-bin output/smallvggnet_lb.pickle --width 64 --height 64
