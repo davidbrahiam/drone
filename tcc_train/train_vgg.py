@@ -93,8 +93,8 @@ BS = 32
 # binary_crossentropy for 2-class classification)
 print("[INFO] training network...")
 opt = SGD(lr=INIT_LR, decay=INIT_LR / EPOCHS)
-model.compile(loss="binary_crossentropy", optimizer=opt,
-	metrics=["accuracy"])
+# model.compile(loss="binary_crossentropy", optimizer=opt,
+# 	metrics=["accuracy"])
 
 # train the network
 H = model.fit_generator(aug.flow(trainX, trainY, batch_size=BS),

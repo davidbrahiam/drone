@@ -1,5 +1,5 @@
 # USAGE
-# python train_simple_nn.py --dataset animals --model output/simple_nn.model --label-bin output/simple_nn_lb.pickle --plot output/simple_nn_plot.png
+# python train_simple_nn.py --dataset images --model output/simple_nn.model --label-bin output/simple_nn_lb.pickle --plot output/simple_nn_plot.png
 
 # set the matplotlib backend so figures can be saved in the background
 import matplotlib
@@ -31,6 +31,8 @@ ap.add_argument("-l", "--label-bin", required=True,
 	help="path to output label binarizer")
 ap.add_argument("-p", "--plot", required=True,
 	help="path to output accuracy/loss plot")
+ap.add_argument("-r", "--roc", required=True,
+	help="path to output roc curve plot")
 args = vars(ap.parse_args())
 
 # initialize the data and labels
@@ -102,6 +104,35 @@ predictions = model.predict(testX, batch_size=32)
 print(classification_report(testY.argmax(axis=1),
 	predictions.argmax(axis=1), target_names=lb.classes_))
 
+from sklearn.metrics import roc_curve,auc, roc_auc_score
+probs = predictions
+# Compute ROC curve and ROC area for each class
+fpr = dict()
+tpr = dict()
+roc_auc = dict()
+for i in [0,1,2]:
+    fpr[i], tpr[i], _ = roc_curve(testY[:,i], probs[:, i])
+    roc_auc[i] = auc(fpr[i], tpr[i])
+
+# Compute micro-average ROC curve and ROC area
+fpr["micro"], tpr["micro"], _ = roc_curve(testY.ravel(), probs.ravel())
+roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+# Plot of a ROC curve for a specific class
+
+plt.figure()
+lw = 2
+plt.plot(fpr[2], tpr[2], color='darkorange',
+         lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
+plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic example')
+plt.legend(loc="lower right")
+plt.savefig(args["roc"])
+
+
 # plot the training loss and accuracy
 N = np.arange(0, EPOCHS)
 plt.style.use("ggplot")
@@ -110,7 +141,7 @@ plt.plot(N, H.history["loss"], label="train_loss")
 plt.plot(N, H.history["val_loss"], label="val_loss")
 plt.plot(N, H.history["acc"], label="train_acc")
 plt.plot(N, H.history["val_acc"], label="val_acc")
-plt.title("Training Loss and Accuracy (Simple NN)")
+plt.title("Training Loss and Accuracy MLP")
 plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend()

@@ -91,7 +91,7 @@ count = 847
 def image_callback(msg):
     global count
     global count2
-    if(count2<20):
+    if(count2<15):
         count2+=1
         return
     else:
@@ -227,6 +227,7 @@ if __name__ == '__main__':
 # USAGE
 # Stop rostopic pub -1 /ardrone/land std_msgs/Empty
 # Start python tcc_navegate.py --model output/simple_nn.model --label-bin output/simple_nn_lb.pickle --width 32 --height 32 --flatten 1
+# Start cnn python tcc_navegate.py --model output/smallvggnet.model --label-bin output/smallvggnet_lb.pickle --width 64 --height 64
 # Camera rosrun image_view image_view image:=/ardrone/front/image_raw 
 # World roslaunch cvg_sim_gazebo tcc_world.launch
 
