@@ -48,7 +48,6 @@ ap.add_argument("-f", "--flatten", type=int, default=-1,
     help="whether or not we should flatten the image")
 args = vars(ap.parse_args())
 
-
 # load the model and label binarizer
 print("[INFO] loading network and label binarizer...")
 model = load_model(args["model"])
@@ -203,8 +202,6 @@ def navegate(dir):
     vel_msg.linear.z = 0.0
     control_pub.publish(vel_msg)
 
-
-
 def main():
     global time_initial
     global takeoff_pub
@@ -220,9 +217,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
 
 # USAGE
 # Stop rostopic pub -1 /ardrone/land std_msgs/Empty

@@ -1,5 +1,5 @@
 # USAGE
-# python train_vgg.py --dataset animals --model output/smallvggnet.model --label-bin output/smallvggnet_lb.pickle --plot output/smallvggnet_plot.png
+# python train_vgg1.py --dataset images --model output/smallvggnet.model --label-bin output/smallvggnet_lb.pickle --plot output/smallvggnet_plot.png --roc roc_curve.png
 
 # set the matplotlib backend so figures can be saved in the background
 import matplotlib
@@ -132,7 +132,7 @@ plt.figure()
 lw = 2
 plt.plot(fpr[2], tpr[2], color='darkorange',
          lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
-plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.plot([0, 1], [0, 1], label='Random Classification', color='navy', lw=lw, linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
